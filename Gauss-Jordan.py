@@ -16,22 +16,44 @@ for i in range(renglones):
 for i in range(renglones):
 	for j in range(columnas):
 		print("escribe el elemento ",i,j)
-		matriz[i][j]=input()
+		matriz[i][j]=int(input())
 #imprimir la matriz 
 print("Matriz a resolver:")
 for i in range(renglones):
 	print("|",end=" ")
 	for j in range(columnas):
+		if j==columnas-1:
+			print("|",end=" ")
 		print(matriz[i][j],end=" ")
 	print("|")
+print()
 #obtener el renglon pivote
-#para recorrer el renglon se hara una lista que tenga los elementos al reves
-recorrido=[]
-#se hace una lista con los elementos necesarios
-for j in range(columnas):
-	recorrido.append(None)
-#se llenan en orden desencente
-for j in range(columnas):
-	recorrido[j]=columnas-j-1
-print(recorrido)
-
+#el proceso de Gauss Jordan es por los renglones el for nos servira para hacer las respectivas operaciones
+for i in range(renglones):
+	#este for sera para que el elemento i de la columna se divida entre los demas y asi mismo al final
+	#se guardara el elemento en un espacio para que cuando se divida entre si misma no se pierda su  valor
+	#orginal y asi no afecte los elementos que van despues de el
+	memoria=matriz[i][i]
+	for j in range(columnas):
+		matriz[i][j]=matriz[i][j]/memoria
+	#condicion especial de una accion que se hara si el renglon que se esta trabajando no es el ultimo
+	#ya que si es el ultimo no tiene que restar sus elementos a un renglon inferior porque no existe un renglon inferior
+	if i!=renglones-1:
+		#este for es para que recorra los renglones inferiores asi si se encuentra en el renglon 0 de 2 
+		#hara la accion para el renglon 1 y 2 y si se encuentra en el renglon  2 de 3 hara la accion para el renglon 3 
+		for k in range(renglones-i-1):
+			#se guardara en un espacio el elemento debajo del pivote que queremos que sea 0 para que cuando se continue
+			#no se borre la informacion original
+			memoria=matriz[i+k+1][i]
+			#este for es para haga la resta elemento a elemento y que debajo de la diagonal principal queden solo 0
+			for j in range(columnas):
+				matriz[i+k+1][j]=(matriz[i][j]*(-memoria))+matriz[i+k+1][j]
+#se imprime la matriz resuelta
+print("Matriz resuelta")
+for i in range(renglones):
+	print("|",end=" ")
+	for j in range(columnas):
+		if j==columnas-1:
+			print("|",end=" ")
+		print(matriz[i][j],end=" ")
+	print("|")
