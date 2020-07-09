@@ -10,13 +10,9 @@ for i in range(renglones):
 	matriz.append([])
 	#segundo for es para recorrer las columnas
 	for j in range(columnas):
-		#esta ves se agregara un elemento vacio con el .append
-		matriz[i].append(None)	
-#creacion de la matriz con los valores que ingrese el usuario
-for i in range(renglones):
-	for j in range(columnas):
-		print("escribe el elemento ",i,j)
-		matriz[i][j]=int(input())
+		#esta ves se agregara un el elemento por el usuario con el .append
+		print("Ingrese el valor ",i,j)
+		matriz[i].append(float(input()))	
 #imprimir la matriz 
 print("Matriz a resolver:")
 for i in range(renglones):
@@ -48,6 +44,22 @@ for i in range(renglones):
 			#este for es para haga la resta elemento a elemento y que debajo de la diagonal principal queden solo 0
 			for j in range(columnas):
 				matriz[i+k+1][j]=(matriz[i][j]*(-memoria))+matriz[i+k+1][j]
+#Se repetira el proceso anterior en la parte especifica donde se obtiene el 0 pero esta vez desde el ultimo renglon hacia arriba
+#Se crea una lista en orden descendente para que los renglones se recorran alrevez
+recorrido=[]
+for i in range(renglones):
+	recorrido.append(int(renglones-i-1))
+#aqui empieza la obtencion de los demas 0 solo se haran operaciones en el elemento que esta arriba de i,i y en el resultado
+for i in recorrido:
+	#la accion se ejecutara solo si es diferente al primer renglon
+	if i!=0:
+		#el for es para ejecutar la accion a cada renglon superior
+		for k in range(i):
+			#se guarda la informacion para obtener el 0 y cuando se multiplique por el resultado no se borre la informacion
+			memoria=matriz[i-k-1][i]
+			#estas dos acciones son para que se haga la resta en el elemento superior y el resultado del renglon superior
+			matriz[i-k-1][i]=(matriz[i][i]*(-memoria))+matriz[i-k-1][i]
+			matriz[i-k-1][columnas-1]=(matriz[i][columnas-1]*(-memoria))+matriz[i-k-1][columnas-1]
 #se imprime la matriz resuelta
 print("Matriz resuelta")
 for i in range(renglones):
