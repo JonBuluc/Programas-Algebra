@@ -1,3 +1,11 @@
+print("La entrada del programa es una matriz ampliada para sistemas de ecuaciones")
+print("La ultima columna es el resultado numerico mientras que las demas columnas son los coeficientes de las incognitas")
+print("Un ejemplo es el siguiente")
+print("x+2y=4")
+print("-3x+4y=2")
+print("La representacion en una matriz del sistema anterior es el siguiente y asi se debera de ingresar para usar el programa")
+print("| 1 2 | 4 |")
+print("| -3 4 | 2 |")
 #declaracion de la matriz 
 matriz=[]
 #peticion del usuario para los renglones y columnas
@@ -57,9 +65,9 @@ for i in recorrido:
 		for k in range(i):
 			#se guarda la informacion para obtener el 0 y cuando se multiplique por el resultado no se borre la informacion
 			memoria=matriz[i-k-1][i]
-			#estas dos acciones son para que se haga la resta en el elemento superior y el resultado del renglon superior
-			matriz[i-k-1][i]=(matriz[i][i]*(-memoria))+matriz[i-k-1][i]
-			matriz[i-k-1][columnas-1]=(matriz[i][columnas-1]*(-memoria))+matriz[i-k-1][columnas-1]
+			#este for es para que se obtenga un 0 en el elemento superior de i,i y que se efectue la misma operacion con los siguientes elementos del renglon superior
+			for j in range(columnas-i):
+				matriz[i-k-1][i+j]=(matriz[i][i+j]*(-memoria))+matriz[i-k-1][i+j]
 #se imprime la matriz resuelta
 print("Matriz resuelta")
 for i in range(renglones):
