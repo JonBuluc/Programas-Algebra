@@ -34,49 +34,50 @@ print()
 #obtener el renglon pivote
 #el proceso de Gauss Jordan es por los renglones el for nos servira para hacer las respectivas operaciones
 for i in range(renglones):
-	#condicion especial de una accion que se hara si el renglon que se esta trabajando no es el ultimo
-	#ya que si es el ultimo no tiene que restar sus elementos a un renglon inferior porque no existe un renglon inferior
-	if i!=renglones-1:
-		#declaracion de una variable para que el renglon pivote sea el que tenga el mayor valor absoluto evitando asi que
-		#que el elemento sea 0 y asi no habra division sobre 0 ademas si se elige el de mayor valor absoluto hace mas pequeño
-		#los errores decimales
-		mayor=i
-		#el for hara que se comparen todos los elementos que pueden ser candidatos a ser el pivote al final solo quedara el
-		#del valor absoluto mas grande
-		for ii in range(renglones-i-1):
-			if abs(matriz[mayor][i])<abs(matriz[ii+1][i]):
-				mayor=ii+1
-		#si el renglon pivote seleccionado es en el que ya se estaba trabajando no se tendra que hacer nada pero si es otro
-		#se tendra que hacer la operacion elemental de cambio de renglon
-		if mayor!=i:
-			#se guardara el renglon a quitar en esta memoria
-			memoriarenglon=[]
-			#el for sera para que se haga el cambio elemento a elemento recorriendo el renglon
-			for j in range (columnas):
-				#primero se guarda el renglon que se va a reemplazar
-				memoriarenglon.append(float(matriz[i][j]))
-				#luego se intercambia el renglon por el nuevo renglon pivote
-				matriz[i][j]=matriz[mayor][j]
-				#despues se regresa el antiguo renglon pivote al lugar donde estaba el nuevo renglon pivote
-				matriz[mayor][j]=memoriarenglon[j]
-		#si todos los elementos llegaran a ser 0 se pondra un if para pasar a la siguiente iteracion del i principal
-		if matriz[i][i]==0:
+	#declaracion de una variable para que el renglon pivote sea el que tenga el mayor valor absoluto evitando asi que
+	#que el elemento sea 0 y asi no habra division sobre 0 ademas si se elige el de mayor valor absoluto hace mas pequeño
+	#los errores decimales
+	mayor=i
+	#el for hara que se comparen todos los elementos que pueden ser candidatos a ser el pivote al final solo quedara el
+	#del valor absoluto mas grande
+	for ii in range(renglones-i-1):
+		if i==renglones-1:
 			continue
-		#este for sera para que el elemento i de la columna se divida entre los demas y asi mismo al final
-		#se guardara el elemento en un espacio para que cuando se divida entre si misma no se pierda su  valor
-		#orginal y asi no afecte los elementos que van despues de el
-		memoria=matriz[i][i]
+		if abs(matriz[mayor][i])<abs(matriz[ii+1][i]):
+			mayor=ii+1
+	#si el renglon pivote seleccionado es en el que ya se estaba trabajando no se tendra que hacer nada pero si es otro
+	#se tendra que hacer la operacion elemental de cambio de renglon
+	if mayor!=i:
+		#se guardara el renglon a quitar en esta memoria
+		memoriarenglon=[]
+		#el for sera para que se haga el cambio elemento a elemento recorriendo el renglon
+		for j in range (columnas):
+			#primero se guarda el renglon que se va a reemplazar
+			memoriarenglon.append(float(matriz[i][j]))
+			#luego se intercambia el renglon por el nuevo renglon pivote
+			matriz[i][j]=matriz[mayor][j]
+			#despues se regresa el antiguo renglon pivote al lugar donde estaba el nuevo renglon pivote
+			matriz[mayor][j]=memoriarenglon[j]
+	#si todos los elementos llegaran a ser 0 se pondra un if para pasar a la siguiente iteracion del i principal
+	if matriz[i][i]==0:
+		continue
+	#este for sera para que el elemento i de la columna se divida entre los demas y asi mismo al principio
+	#se guardara el elemento en un espacio para que cuando se divida entre si misma no se pierda su  valor
+	#orginal y asi no afecte los elementos que van despues de el
+	memoria=matriz[i][i]
+	for j in range(columnas-i):
+		matriz[i][j+i]=matriz[i][j+i]/memoria
+	if i==renglones-1:
+		continue
+	#este for es para que recorra los renglones inferiores asi si se encuentra en el renglon 0 de 2 
+	#hara la accion para el renglon 1 y 2 y si se encuentra en el renglon  2 de 3 hara la accion para el renglon 3 
+	for k in range(renglones-i-1):
+		#se guardara en un espacio el elemento debajo del pivote que queremos que sea 0 para que cuando se continue
+		#no se borre la informacion original
+		memoria=matriz[i+k+1][i]
+		#este for es para haga la resta elemento a elemento y que debajo de la diagonal principal queden solo 0
 		for j in range(columnas):
-			matriz[i][j]=matriz[i][j]/memoria
-		#este for es para que recorra los renglones inferiores asi si se encuentra en el renglon 0 de 2 
-		#hara la accion para el renglon 1 y 2 y si se encuentra en el renglon  2 de 3 hara la accion para el renglon 3 
-		for k in range(renglones-i-1):
-			#se guardara en un espacio el elemento debajo del pivote que queremos que sea 0 para que cuando se continue
-			#no se borre la informacion original
-			memoria=matriz[i+k+1][i]
-			#este for es para haga la resta elemento a elemento y que debajo de la diagonal principal queden solo 0
-			for j in range(columnas):
-				matriz[i+k+1][j]=(matriz[i][j]*(-memoria))+matriz[i+k+1][j]
+			matriz[i+k+1][j]=(matriz[i][j]*(-memoria))+matriz[i+k+1][j]
 #Se repetira el proceso anterior en la parte especifica donde se obtiene el 0 pero esta vez desde el ultimo renglon hacia arriba
 #Se crea una lista en orden descendente para que los renglones se recorran alrevez
 recorrido=[]
@@ -86,13 +87,25 @@ for i in range(renglones):
 for i in recorrido:
 	#la accion se ejecutara solo si es diferente al primer renglon
 	if i!=0:
+		#esta es una opcion para recorrer las columnas debido a un problema con matrices que tengan 0 en ciertas partes donde deberia
+		#tener otro numero esto sucede cuando la matriz no tiene solucion unica pero sirve para dar su forma mas reducida 
+		l=i
+		while matriz[i][l]==0:
+			l=l+1
+		if matriz[i][l]!=1: 
+			memoria=matriz[i][l]
+			#este for sera para que el elemento i de la columna se divida entre los demas y asi mismo al principio
+			#se guardara el elemento en un espacio para que cuando se divida entre si misma no se pierda su  valor
+			#orginal y asi no afecte los elementos que van despues de el
+			for j in range(columnas-l):
+				matriz[i][j+l]=matriz[i][j+l]/memoria
 		#el for es para ejecutar la accion a cada renglon superior
 		for k in range(i):
 			#se guarda la informacion para obtener el 0 y cuando se multiplique por el resultado no se borre la informacion
-			memoria=matriz[i-k-1][i]
+			memoria=matriz[i-k-1][l]
 			#este for es para que se obtenga un 0 en el elemento superior de i,i y que se efectue la misma operacion con los siguientes elementos del renglon superior
-			for j in range(columnas-i):
-				matriz[i-k-1][i+j]=(matriz[i][i+j]*(-memoria))+matriz[i-k-1][i+j]
+			for j in range(columnas):
+				matriz[i-k-1][j]=((matriz[i][j])*(-memoria))+matriz[i-k-1][j]
 #se imprime la matriz resuelta
 print("Matriz resuelta")
 for i in range(renglones):
